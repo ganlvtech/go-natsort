@@ -19,7 +19,7 @@ func TestSort(t *testing.T) {
 		},
 		{
 			[]string{},
-			[]string(nil), // []string{},
+			[]string(nil), // modified case
 		},
 		{
 			[]string{"a"},
@@ -35,7 +35,7 @@ func TestSort(t *testing.T) {
 		},
 		{
 			[]string{"1", "2", "30", "22", "0", "00", "3"},
-			[]string{"0", "00", "1", "2", "3", "22", "30"},
+			[]string{"00", "0", "1", "2", "3", "22", "30"}, // modified case
 		},
 		{
 			[]string{"A1", "A0", "A21", "A11", "A111", "A2"},
@@ -55,8 +55,8 @@ func TestSort(t *testing.T) {
 		},
 		{
 			// regression test for #8
-			[]string{"a0000001", "a0001"},
 			[]string{"a0001", "a0000001"},
+			[]string{"a0000001", "a0001"}, // modified case
 		},
 		{
 			// regression test for #10 - Number sort before any symbols even if theyre lower on the ASCII table
@@ -111,30 +111,30 @@ func TestCompare(t *testing.T) {
 		{[]string{"a", "b"}, -1},
 		{[]string{"a", "aa"}, -1},
 		{[]string{"a0", "a1"}, -1},
-		{[]string{"a0", "a00"}, -1},
+		{[]string{"a00", "a0"}, -1}, // modified case
 		{[]string{"a00", "a01"}, -1},
-		// {[]string{"a01", "a1"}, -1}, // bad case
+		{[]string{"a01", "a1"}, -1},
 		{[]string{"a01", "a2"}, -1},
 		{[]string{"a01x", "a2x"}, -1},
 		// Only the last number matters.
-		{[]string{"a0b00", "a00b1"}, -1},
-		{[]string{"a0b00", "a00b01"}, -1},
-		// {[]string{"a00b0", "a0b00"}, -1}, // bad case
-		// {[]string{"a00b00", "a0b01"}, -1}, // bad case
-		// {[]string{"a00b00", "a0b1"}, -1}, // bad case
+		{[]string{"a00b1", "a0b00"}, -1},  // modified case
+		{[]string{"a00b01", "a0b00"}, -1}, // modified case
+		{[]string{"a00b0", "a0b00"}, -1},
+		{[]string{"a00b00", "a0b01"}, -1},
+		{[]string{"a00b00", "a0b1"}, -1},
 		{[]string{"a", ""}, 1},
 		{[]string{"aa", "a"}, 1},
 		{[]string{"b", "a"}, 1},
 		{[]string{"a01", "a00"}, 1},
 		{[]string{"a2", "a01"}, 1},
 		{[]string{"a2x", "a01x"}, 1},
-		{[]string{"a00b00", "a0b0"}, 1},
-		{[]string{"a00b01", "a0b00"}, 1},
+		{[]string{"a0b0", "a00b00"}, 1},  // modified case
+		{[]string{"a0b00", "a00b01"}, 1}, // modified case
 		{[]string{"10", "2"}, 1},
 		{[]string{"a", "a"}, 0},
 		{[]string{"a01", "a01"}, 0},
 		{[]string{"a1", "a1"}, 0},
-		// {[]string{"a00b00", "a0b00"}, 0}, // bad case
+		// {[]string{"a00b00", "a0b00"}, 0}, // removed case
 		{[]string{"a0b00", "a0b00"}, 0},
 		// https://github.com/maruel/natural/issues/5
 		{[]string{"a100000000000000000000a1", "a100000000000000000000a2"}, -1},
